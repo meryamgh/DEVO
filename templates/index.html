@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catégories hiérarchiques</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .category, .final-item { margin-left: 20px; cursor: pointer; }
+        .children { display: none; margin-left: 20px; }
+        .open > .children { display: block; }
+    </style>
+</head>
+<body>
+
+<h1>Catégories hiérarchiques</h1>
+<div id="categories-container">Chargement des données...</div>
+
+<script>
+    async function loadCategory(categoryId) {
+        const response = await fetch(`/api/categories/${categoryId}`);
+        if (response.ok) {
+            const data = await response.json();
+            displayCategory(data, document.getElementById('categories-container'));
+        } else {
+            document.getElementById('categories-container').innerText = "Erreur de chargement des données.";
+        }
+    }
+
+    function displayCategory(category, container) {
+        const categoryElement = document.createElement("div");
+        categoryElement.classList.add("category");
+
+        const title = document.createElement("span");
+
+        // Afficher le libelle ou libelle_parent si disponible, sinon l'ID
+        if (category.libelle) {
+            title.textContent = category.libelle;
+        } else if (category.libelle_parent) {
+            title.textContent = category.libelle_parent;
+        } else {
+            title.textContent = `Category ${category.category_id}`;
+        }
+
+        title.addEventListener("click", () => {
+            categoryElement.classList.toggle("open");
+        });
+        categoryElement.appendChild(title);
+
+        if (category.children) {
+            const childrenContainer = document.createElement("div");
+            childrenContainer.classList.add("children");
+
+            category.children.forEach(child => displayCategory(child, childrenContainer));
+            categoryElement.appendChild(childrenContainer);
+        } else if (category.final_data) {
+            category.final_data.forEach(final => {
+                const finalItem = document.createElement("div");
+                finalItem.classList.add("final-item");
+                finalItem.textContent = final.libelle;
+                categoryElement.appendChild(finalItem);
+            });
+        }
+
+        container.appendChild(categoryElement);
+    }
+
+    // Charger les catégories principales au démarrage
+    loadCategory(66719);
+    loadCategory(69486);
+</script>
+
+</body>
+</html>
