@@ -7,7 +7,7 @@ import os
 base_url = "https://api-bc.batiactu.com/api/bcdf/"
 headers = {
     'Accept': 'application/json, text/plain, */*',
-  'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjdjMTNhZmZlM2Q2ODFkMjgxYjdiYzg4MWUxZTY5MDZmOWQ3N2QzMzMwYTU1ZmY1MDJhNGJhODhjZjc0MzVhNjY4ZTRjOGEyOTAwZjQ0MTI0In0.eyJhdWQiOiIxMCIsImp0aSI6IjdjMTNhZmZlM2Q2ODFkMjgxYjdiYzg4MWUxZTY5MDZmOWQ3N2QzMzMwYTU1ZmY1MDJhNGJhODhjZjc0MzVhNjY4ZTRjOGEyOTAwZjQ0MTI0IiwiaWF0IjoxNzMwMjM1NTU5LCJuYmYiOjE3MzAyMzU1NTksImV4cCI6MTczMTk2MzU1OSwic3ViIjoiMTI5NzUiLCJzY29wZXMiOltdfQ.MNnAF7LeA-1jX4nGzbcCDvQllsW2HMb8REyVyx4Qt3UCfkcqAIdoAORMUyh-ePZHiMDonuZGqKRAhkPgtDiu7zJospCCIktwkLt0bP7FrTuZrOQNr-xdRRl4lwmbf71PWH0u1i1EouOgui0OHvgPMBBvM8gHpvE5kvjccBXeOrLUtveYpzl9VYWMNfoZzF8mt0vpwo29OM1NikV8-DKZyHrf9xbeIq3zRlKY_e-v_XwS8lRaYqm7EM6USJv1B1weyHJZ1sLr4W_92-fMGbXmGn7c3sXWoDg1l9-KrdmtRiacj87OntX1ReHIRItkMXJL9qaxq4Q0NPtVYdkXcretkhumg9THPiyrc1oepyE0-5y_JYaCM13yT9lTKdyHSYu_j4q_NappoJk7PIgC0rFF2ce4VALyloAB68wZDbwg9lobqEsGQ6ZlK3R23Hvu9wax41_Vgz2PF3ibChoznZ4-xC8cZEbFr31Iq8FGQT48DxendPgIkCmcEqrpyV_zWlp-0Tb-NvdSNcLpU9jCNieeVQ5dWIAC7W_F_ox0wLYZBElZa5cwKoUva7AjMn3yRaCUXnIg42e9W_tWQkAtpDE3AVq7wj3k2kzFq2LO9FXHooNtb5XYwUH49WKRW9bSWVz3TU2BSPT4YykMtAyQkCnlx9kpr_xUSiTBy2ZySEfTMpY',    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
+  'Authorization': 'Bearer your_token',    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
     'Content-Type': 'application/json',
 }
 
