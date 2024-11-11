@@ -27,16 +27,13 @@
    ```
 
 4. **Unzip the Data File**  
-   Locate the data file in **Devo Drive/Meryam** and unzip it. Move the extracted files into your project directory, or to a specific directory if the code requires it.
+   Locate the data file in **Devo Drive/Meryam** and download it to your local machine. **Important:** Do not unzip it directly in the Drive! Extract the contents and place     the unzipped data folder in the same directory as `app.py`.
 
-5. **Add the Data File to Your Code**  
-   Ensure that the data file path in the code points to the location where you placed the data file. Update the path if necessary.
-
-6. **Run the Code**  
+5. **Run the Code**  
    Start the application by running:
    ```bash
    python app.py
    ```
 
-7. **Access the Application**  
+6. **Access the Application**  
    After running the application, a link will be displayed in the terminal. Open this link in your browser to access the application.
