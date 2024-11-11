@@ -9,11 +9,31 @@
         .category, .final-item { margin-left: 20px; cursor: pointer; }
         .children { display: none; margin-left: 20px; }
         .open > .children { display: block; }
+        .final-item { color: darkblue; }
+        .last-category { color: red; font-weight: bold; margin-top: 10px; }
+        .details-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            margin-left: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .modal-content {
+            max-height: 400px; 
+            overflow-y: auto; 
+        }
     </style>
 </head>
 <body>
 
 <h1>Catégories hiérarchiques</h1>
+
+<!-- Search Bar -->
+<input type="text" id="search-input" placeholder="Rechercher dans les données finales..." style="width: 100%; padding: 10px; margin-bottom: 20px;">
+<div id="search-results"></div>
+
 <div id="categories-container">Chargement des données...</div>
 
 <script>
@@ -22,18 +42,29 @@
         if (response.ok) {
             const data = await response.json();
             displayCategory(data, document.getElementById('categories-container'));
+            addToSearchData(data); // Add data to search index
         } else {
             document.getElementById('categories-container').innerText = "Erreur de chargement des données.";
         }
     }
 
-    function displayCategory(category, container) {
+    const searchData = [];
+
+    function addToSearchData(category) {
+        if (category.final_data) {
+            searchData.push(...category.final_data);
+        }
+        if (category.children) {
+            category.children.forEach(child => addToSearchData(child));
+        }
+    }
+
+    function displayCategory(category, container, isLastCategory = false) {
         const categoryElement = document.createElement("div");
         categoryElement.classList.add("category");
 
         const title = document.createElement("span");
 
-        // Afficher le libelle ou libelle_parent si disponible, sinon l'ID
         if (category.libelle) {
             title.textContent = category.libelle;
         } else if (category.libelle_parent) {
@@ -60,14 +91,94 @@
                 finalItem.textContent = final.libelle;
                 categoryElement.appendChild(finalItem);
             });
+            categoryElement.classList.add("last-category");
+
+            const detailsButton = document.createElement("button");
+            detailsButton.classList.add("details-button");
+            detailsButton.textContent = "More Details";
+            detailsButton.addEventListener("click", () => showDetails(category));
+
+            categoryElement.appendChild(detailsButton);
         }
 
         container.appendChild(categoryElement);
     }
 
-    // Charger les catégories principales au démarrage
+    function showDetails(category) {
+        const details = category.final_data.map(item => `
+            <p><strong>${item.libelle}</strong>: ${item.libtech}</p>
+            <p>Prix: ${item.prix} ${item.unite}</p>
+        `).join("");
+        
+        const detailsContainer = document.createElement("div");
+        detailsContainer.classList.add("modal-content");
+        detailsContainer.innerHTML = `
+            <h3>Détails pour ${category.libelle || category.libelle_parent || "la catégorie"}</h3>
+            ${details}
+        `;
+        
+        const modalBackground = document.createElement("div");
+        modalBackground.style.position = "fixed";
+        modalBackground.style.top = 0;
+        modalBackground.style.left = 0;
+        modalBackground.style.width = "100%";
+        modalBackground.style.height = "100%";
+        modalBackground.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+        modalBackground.style.display = "flex";
+        modalBackground.style.justifyContent = "center";
+        modalBackground.style.alignItems = "center";
+
+        const modal = document.createElement("div");
+        modal.style.backgroundColor = "#fff";
+        modal.style.padding = "20px";
+        modal.style.borderRadius = "8px";
+        modal.style.width = "80%";
+        modal.style.maxWidth = "600px";
+        
+        const closeButton = document.createElement("button");
+        closeButton.textContent = "Fermer";
+        closeButton.style.marginTop = "10px";
+        closeButton.addEventListener("click", () => document.body.removeChild(modalBackground));
+
+        modal.appendChild(detailsContainer);
+        modal.appendChild(closeButton);
+        modalBackground.appendChild(modal);
+        
+        document.body.appendChild(modalBackground);
+    }
+
+    function searchFinalData(query) {
+        const resultsContainer = document.getElementById('search-results');
+        resultsContainer.innerHTML = ""; 
+        if (!query) return;
+
+        const results = searchData.filter(item =>
+            item.libelle.toLowerCase().includes(query.toLowerCase())
+        );
+
+        results.forEach(result => {
+            const resultItem = document.createElement("div");
+            resultItem.classList.add("final-item");
+            resultItem.innerHTML = `<strong>${result.libelle}</strong>: ${result.libtech} - Prix: ${result.prix} ${result.unite}`;
+            resultsContainer.appendChild(resultItem);
+        });
+
+        if (results.length === 0) {
+            resultsContainer.innerHTML = "<p>Aucun résultat trouvé.</p>";
+        }
+    }
+
+    document.getElementById('search-input').addEventListener("input", (event) => {
+        searchFinalData(event.target.value);
+    });
+
+
+    loadCategory(48629);
+    loadCategory(48646);
+    loadCategory(48659);
     loadCategory(66719);
     loadCategory(69486);
+    loadCategory(141175);  
 </script>
 
 </body>
