@@ -20,11 +20,20 @@
             cursor: pointer;
             border-radius: 4px;
         }
+        .modal-content {
+            max-height: 400px; 
+            overflow-y: auto; 
+        }
     </style>
 </head>
 <body>
 
 <h1>Catégories hiérarchiques</h1>
+
+<!-- Search Bar -->
+<input type="text" id="search-input" placeholder="Rechercher dans les données finales..." style="width: 100%; padding: 10px; margin-bottom: 20px;">
+<div id="search-results"></div>
+
 <div id="categories-container">Chargement des données...</div>
 
 <script>
@@ -33,8 +42,20 @@
         if (response.ok) {
             const data = await response.json();
             displayCategory(data, document.getElementById('categories-container'));
+            addToSearchData(data); // Add data to search index
         } else {
             document.getElementById('categories-container').innerText = "Erreur de chargement des données.";
+        }
+    }
+
+    const searchData = [];
+
+    function addToSearchData(category) {
+        if (category.final_data) {
+            searchData.push(...category.final_data);
+        }
+        if (category.children) {
+            category.children.forEach(child => addToSearchData(child));
         }
     }
 
@@ -90,6 +111,7 @@
         `).join("");
         
         const detailsContainer = document.createElement("div");
+        detailsContainer.classList.add("modal-content");
         detailsContainer.innerHTML = `
             <h3>Détails pour ${category.libelle || category.libelle_parent || "la catégorie"}</h3>
             ${details}
@@ -124,6 +146,32 @@
         
         document.body.appendChild(modalBackground);
     }
+
+    function searchFinalData(query) {
+        const resultsContainer = document.getElementById('search-results');
+        resultsContainer.innerHTML = ""; 
+        if (!query) return;
+
+        const results = searchData.filter(item =>
+            item.libelle.toLowerCase().includes(query.toLowerCase())
+        );
+
+        results.forEach(result => {
+            const resultItem = document.createElement("div");
+            resultItem.classList.add("final-item");
+            resultItem.innerHTML = `<strong>${result.libelle}</strong>: ${result.libtech} - Prix: ${result.prix} ${result.unite}`;
+            resultsContainer.appendChild(resultItem);
+        });
+
+        if (results.length === 0) {
+            resultsContainer.innerHTML = "<p>Aucun résultat trouvé.</p>";
+        }
+    }
+
+    document.getElementById('search-input').addEventListener("input", (event) => {
+        searchFinalData(event.target.value);
+    });
+
 
     loadCategory(48629);
     loadCategory(48646);
