@@ -1,6 +1,6 @@
 # DEVO
 
-### Instructions for Setting Up and Running the Project
+### Instructions to visualize API data in an interface
 
 1. **Create a New Virtual Environment**  
    Open your terminal and create a virtual environment by running:
