@@ -3,7 +3,7 @@ import json
 import time
 import os
 
-# Set the base URL and headers for the requests
+
 base_url = "https://api-bc.batiactu.com/api/bcdf/"
 headers = {
     'Accept': 'application/json, text/plain, */*',
@@ -98,17 +98,16 @@ def get_last_sub_data(id_smallest_parent):
     print(f"Nombre maximal de tentatives atteint pour l'ID {id_smallest_parent}.")
     return None
 
-# Fonction pour enregistrer chaque entrée finale dans le fichier JSON
 def save_data_to_json(json_file, data):
     with open(json_file, 'a', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
-        f.write(",\n")  # Ajouter une virgule après chaque objet pour garder un format JSON de liste
+        f.write(",\n")  
 
 # Fonction principale pour démarrer la récupération et initialiser le fichier JSON
 def main():
     json_file = 'all_items_48659.json'
     
-    # Si le fichier n'existe pas, créer une liste JSON vide pour les données
+  
     if not os.path.exists(json_file):
         with open(json_file, 'w', encoding='utf-8') as f:
             f.write("[\n")
@@ -116,10 +115,6 @@ def main():
    # parents = get_first_data()
   #  print(parents)
     parents = [48646,48629,141175,48659]
-   # for parent in parents :
-    #    get_sub_data(parent, json_file)
-    # for parent in parents:
-    #     get_sub_data(parent['id'], json_file)
     get_sub_data(48659,json_file)
     with open(json_file, 'a', encoding='utf-8') as f:
         f.write("\n]")  
@@ -127,86 +122,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-# def get_sub_data(id_parent, list_categories,  retries=150, delay=1):
-#     url = f"https://api-bc.batiactu.com/api/bcdf/getFamille/{id_parent}"
-#     for attempt in range(retries):
-#         try:
-
-#             response = requests.get(url, headers=headers)
-#             response.raise_for_status()
-#             categories_data = response.json()
-#             categories = categories_data.get('liste')
-#             if categories==[]:
-#                 list_categories.extend(get_last_sub_data(id_parent))
-#                 return list_categories
-#             list_categories.extend(categories)
-#             ids = [item['id'] for item in categories]
-#             for i in ids:
-#                 print(i)
-#                 get_sub_data(i, list_categories)
-#             break
-#         except requests.exceptions.HTTPError as e:
-#             if response.status_code == 429:
-#                 print(f"Rate limit exceeded. Retrying in {delay} seconds...")
-#                 time.sleep(delay) 
-#                 delay *= 2  
-#             else:
-#                 print(f"Failed to fetch categories for ID {id_parent}: {e}")
-#                 return None
-
-#     else:
-#         print(f"Max retries exceeded for ID {id_parent}.")
-#         return None
-#     return list_categories
-    
-
-# def get_last_sub_data(id_smallest_parent):
-#     retries=150
-#     delay=1
-#     url = f"https://api-bc.batiactu.com/api/bcdf/getOuvrages/{id_smallest_parent}"
-    
-#     for attempt in range(retries):
-#         try:
-#             response = requests.post(url, headers=headers, data=payload)
-#             response.raise_for_status()
-#             final_data = response.json()
-#             categories = final_data.get('liste')
-#             print(f"Final data fetched for category ID {id_smallest_parent}")
-#             return {"final_data": categories}  # Return the fetched data if successful
-
-#         except requests.exceptions.RequestException as e:
-#             if response.status_code == 429:
-#                 print(f"Rate limit exceeded. Retrying in {delay} seconds...")
-#                 time.sleep(delay)  # Wait before retrying
-#                 delay *= 2  # Increase delay for exponential backoff
-#             else:
-#                 print(f"Failed to fetch final data for category ID {id_smallest_parent}: {e}")
-#                 return None
-
-#     print(f"Max retries exceeded for category ID {id_smallest_parent}.")
-#     return None  # Return None if all retries fail
-
-
-# def main():
-#     all_items = []
-#     parents = get_first_data()
-#     ids = [item['id'] for item in parents]
-#     # for i in ids:
-#     #     list_categories = []
-#     #     print(i)
-#     #     all_items.append(get_sub_data(i, list_categories))
-#    # print(get_sub_data(69486,all_items))
-#     result = get_sub_data(69486,all_items)
-#     if result:
-#         with open('all_items_69486.json', 'w', encoding='utf-8') as f:
-#             json.dump(result, f, ensure_ascii=False, indent=4)
-#         print("Data successfully saved to 'all_items.json'")
-#     else:
-#         print("Failed to retrieve data.")
-#     return ""
-
-# if __name__ == "__main__":
-#     main()
